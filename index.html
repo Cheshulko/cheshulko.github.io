@@ -1,0 +1,2067 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Scrapbook</title>
+    <style>
+        /* CSS STYLES */
+        :root {
+            --bg-color: #e3f2fd;
+            --header-bg: #42a5f5;
+            --header-text: #ffffff;
+            --link-color: #1e88e5;
+            --text-color: #333333;
+            --card-bg: #ffffff;
+            --border-color: #bbdefb;
+
+            /* Tag Colors */
+            --tag-bg: #e1f5fe;
+            --tag-text: #0277bd;
+            --tag-hover: #b3e5fc;
+            --tag-active-bg: #1565c0;
+            --tag-active-text: #ffffff;
+
+            /* Content Highlights */
+            --rule-bg: #f1f8e9;
+            --rule-border: #8bc34a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            cursor: pointer;
+        }
+
+        header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* Top Tag Cloud Section */
+        #tag-cloud-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            display: block;
+        }
+
+        #tag-cloud-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #clear-filters {
+            display: none;
+            margin-top: 15px;
+            background: none;
+            border: 1px solid #d32f2f;
+            color: #d32f2f;
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        #clear-filters:hover {
+            background: #ffebee;
+        }
+
+        /* Back Button */
+        #back-button-container {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .btn-back {
+            display: inline-block;
+            background-color: #fff;
+            color: #1e88e5;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid #bbdefb;
+        }
+
+        .btn-back:hover {
+            background-color: #e3f2fd;
+            transform: translateX(-3px);
+        }
+
+        /* Blog Posts */
+        .blog-post {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(176, 190, 255, 0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .view-list .blog-post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(176, 190, 255, 0.3);
+        }
+
+        .post-title {
+            color: #1565c0;
+            margin-top: 0;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .view-detail .post-title {
+            cursor: default;
+        }
+
+        .post-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--bg-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .post-date {
+            color: #78909c;
+            font-size: 0.9rem;
+        }
+
+        .tag {
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            user-select: none;
+            border: 1px solid transparent;
+        }
+
+        .tag:hover {
+            background-color: var(--tag-hover);
+            transform: scale(1.05);
+        }
+
+        .tag.active {
+            background-color: var(--tag-active-bg);
+            color: var(--tag-active-text);
+        }
+
+        /* Content Truncation */
+        .view-list .post-content {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            opacity: 0.8;
+        }
+
+        .read-more-link {
+            display: none;
+            margin-top: 15px;
+            color: var(--link-color);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .view-list .read-more-link {
+            display: inline-block;
+        }
+
+        .post-content {
+            font-size: 1.05rem;
+        }
+
+        .post-content a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Standard Table */
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        .content-table thead {
+            background-color: var(--bg-color);
+            /* Light Blue Header */
+        }
+
+        .content-table th,
+        .content-table td {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .content-table tr:nth-child(even) {
+            background-color: #fafafa;
+            /* Slight zebra striping for readability */
+        }
+
+        /* Green Rule Box */
+        .rule-box {
+            background-color: var(--rule-bg);
+            border-left: 5px solid var(--rule-border);
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Standard Lists */
+        .post-content ul,
+        .post-content ol {
+            margin-bottom: 15px;
+        }
+
+        .post-content li {
+            margin-bottom: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #546e7a;
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            header {
+                padding: 30px 0;
+            }
+
+            .blog-post {
+                padding: 20px;
+            }
+
+            .post-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            /* Make tables scrollable on mobile */
+            .content-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body class="view-list">
+
+    <header onclick="window.location.hash=''">
+        <h1>English Scrapbook</h1>
+        <p>Grammar & Examples</p>
+    </header>
+
+    <div class="container">
+
+        <!-- Back Button (Shows only in Detail View) -->
+        <div id="back-button-container">
+            <a onclick="goBackToList()" class="btn-back">← Back to Topics</a>
+        </div>
+
+        <!-- Tag Cloud (Shows only in List View) -->
+        <div id="tag-cloud-section">
+            <div id="tag-cloud-container"></div>
+            <button id="clear-filters" onclick="clearAllFilters()">Clear Filters ✕</button>
+        </div>
+
+
+        <!-- ============================================== -->
+        <!--  TO ADD A NEW POST:                            -->
+        <!--  1. Copy "START POST" to "END POST".           -->
+        <!--  2. CHANGE id="post-X" to a unique number/name -->
+        <!--  3. Update tags and content.                   -->
+        <!-- ============================================== -->
+
+        <!-- START POST -->
+        <article id="post-pp-overview" class="blog-post" data-tags="grammar,tenses,present-perfect">
+            <h2 class="post-title" onclick="openPost('post-pp-overview')">Present Perfect Overview</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('tenses'); event.stopPropagation();">tenses</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('present-perfect'); event.stopPropagation();">present-perfect</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    The <strong>Present Perfect</strong> is a bridge between the past and the present.
+                    It is used to talk about experiences, changes, or continuing situations.
+                </p>
+
+                <h3>1. The Formula</h3>
+                <p>To form the Present Perfect, we use the auxiliary verb <strong>have / has</strong> followed by the
+                    <strong>Past Participle</strong> (V3).
+                </p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Auxiliary</th>
+                            <th>Main Verb (Past Participle)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>I / You / We / They</td>
+                            <td><strong>have</strong> ('ve)</td>
+                            <td>eaten / finished / been</td>
+                        </tr>
+                        <tr>
+                            <td>He / She / It</td>
+                            <td><strong>has</strong> ('s)</td>
+                            <td>eaten / finished / been</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="rule-box">
+                    <strong>Rule:</strong> Subject + <em>have / has</em> + Past Participle
+                </div>
+
+                <h3>2. Past Participles (V3)</h3>
+                <p>To use this tense correctly, you must know the Past Participle form of the verb.</p>
+                <ul>
+                    <li><strong>Regular Verbs:</strong> Add <em>-ed</em> (Same as simple past).
+                        <ul>
+                            <li>Walk &rarr; <strong>Walked</strong></li>
+                            <li>Play &rarr; <strong>Played</strong></li>
+                        </ul>
+                    </li>
+                    <li><strong>Irregular Verbs:</strong> Must be memorized.
+                        <ul>
+                            <li>Be &rarr; <strong>Been</strong></li>
+                            <li>Go &rarr; <strong>Gone</strong></li>
+                            <li>See &rarr; <strong>Seen</strong></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>3. Two Main Uses</h3>
+
+                <h4>Use #1: Unspecified Time in the Past</h4>
+                <p>We use Present Perfect to say that an action happened in the past, but <strong>we do not say exactly
+                        when</strong>.</p>
+                <ul>
+                    <li>✅ <em>Correct:</em> I <strong>have seen</strong> that movie.</li>
+                    <li>❌ <em>Incorrect:</em> I have seen that movie <del>yesterday</del>.</li>
+                </ul>
+
+                <h4>Use #2: Started in Past, Continues to Now</h4>
+                <p>We use it for actions or states that started in the past and continue into the present moment (often
+                    with <em>since</em> and <em>for</em>).</p>
+                <ul>
+                    <li>She <strong>has worked</strong> here for five years.</li>
+                    <li>We <strong>have known</strong> each other since 2010.</li>
+                </ul>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-pp-overview')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <!-- START POST -->
+        <article id="post-past-participles" class="blog-post" data-tags="grammar,verbs,past-participle">
+            <h2 class="post-title" onclick="openPost('post-past-participles')">Past Participles</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('verbs'); event.stopPropagation();">verbs</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('past-participle'); event.stopPropagation();">past-participle</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    The <strong>Past Participle</strong> (often called <strong>V3</strong>) is a specific form of a
+                    verb.
+                    It is essential for forming Perfect Tenses and the Passive Voice.
+                </p>
+
+                <h3>1. Regular vs. Irregular Verbs</h3>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">Regular Verbs</th>
+                            <th style="width: 50%;">Irregular Verbs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <p style="margin-top:0;"><strong>Rule:</strong> Add <em>-ed</em> or <em>-d</em>.</p>
+                                <p>Simple Past (V2) and Past Participle (V3) are the same.</p>
+                                <ul style="margin-bottom:0;">
+                                    <li>Walk &rarr; Walked</li>
+                                    <li>Play &rarr; Played</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <p style="margin-top:0;"><strong>Rule:</strong> No logic! Must be memorized.</p>
+                                <p>The form might change completely.</p>
+                                <ul style="margin-bottom:0;">
+                                    <li>Go &rarr; Gone</li>
+                                    <li>Eat &rarr; Eaten</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2. Spelling Rules for Regular Verbs</h3>
+
+                <div class="rule-box">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li><strong>General:</strong> Add <em>-ed</em> (visit &rarr; visited)</li>
+                        <li><strong>Ends in 'e':</strong> Add <em>-d</em> (live &rarr; lived)</li>
+                        <li><strong>Consonant + 'y':</strong> Change 'y' to <em>-ied</em> (study &rarr; studied)</li>
+                        <li><strong>CVC:</strong> Double the last letter (stop &rarr; stopped)</li>
+                    </ul>
+                </div>
+
+                <h3>3. Common Irregular Verbs List</h3>
+
+                <h4>Pattern A: All Three Forms Different</h4>
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Base (V1)</th>
+                            <th>Simple Past (V2)</th>
+                            <th>Past Participle (V3)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Be</td>
+                            <td>Was / Were</td>
+                            <td><strong>Been</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Go</td>
+                            <td>Went</td>
+                            <td><strong>Gone</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Eat</td>
+                            <td>Ate</td>
+                            <td><strong>Eaten</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Write</td>
+                            <td>Wrote</td>
+                            <td><strong>Written</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Pattern B: Past and Participle are the Same</h4>
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Base (V1)</th>
+                            <th>Simple Past (V2)</th>
+                            <th>Past Participle (V3)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Buy</td>
+                            <td>Bought</td>
+                            <td><strong>Bought</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Have</td>
+                            <td>Had</td>
+                            <td><strong>Had</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Make</td>
+                            <td>Made</td>
+                            <td><strong>Made</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Pattern C: No Change</h4>
+                <p>V1 = V2 = V3</p>
+                <ul>
+                    <li><strong>Put</strong> &rarr; Put &rarr; <strong>Put</strong></li>
+                    <li><strong>Cut</strong> &rarr; Cut &rarr; <strong>Cut</strong></li>
+                    <li><strong>Cost</strong> &rarr; Cost &rarr; <strong>Cost</strong></li>
+                </ul>
+
+            </div>
+            <div class="read-more-link" onclick="openPost('post-past-participles')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <!-- START POST -->
+        <article id="post-pp-since-for" class="blog-post" data-tags="grammar,tenses,present-perfect,time-words">
+            <h2 class="post-title" onclick="openPost('post-pp-since-for')">Present Perfect with Since and For</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('tenses'); event.stopPropagation();">tenses</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('present-perfect'); event.stopPropagation();">present-perfect</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('time-words'); event.stopPropagation();">time-words</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    One of the most common uses of the Present Perfect is to talk about actions or situations that
+                    <strong>started in the past and continue to the present</strong>. To do this correctly, we often use
+                    the time words <strong>Since</strong> and <strong>For</strong>.
+                </p>
+
+                <h3>1. The Difference: Point vs. Period</h3>
+                <p>
+                    While both words answer the question <em>"How long?"</em>, they refer to time in different ways.
+                </p>
+
+                <!-- Reusing .content-table -->
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">SINCE (Starting Point)</th>
+                            <th style="width: 50%;">FOR (Duration)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                We use <strong>since</strong> when we mention the <strong>specific moment</strong> when
+                                the action began.
+                            </td>
+                            <td>
+                                We use <strong>for</strong> when we measure the <strong>amount of time</strong>
+                                (duration) from the beginning until now.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <em>Keywords:</em> Clock time, dates, years, specific events.
+                            </td>
+                            <td>
+                                <em>Keywords:</em> Minutes, hours, days, months, years, "a long time".
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Reusing .rule-box -->
+                <div class="rule-box">
+                    <p style="margin:0;"><strong>The Rule of Thumb:</strong></p>
+                    <ul style="margin: 5px 0 0 20px;">
+                        <li><strong>Since</strong> + <em>When did it start?</em> (e.g., 2015, yesterday, 9 AM)</li>
+                        <li><strong>For</strong> + <em>How much time?</em> (e.g., 10 years, 2 days, 5 hours)</li>
+                    </ul>
+                </div>
+
+                <h3>2. Examples in Context</h3>
+
+                <h4>Using "Since"</h4>
+                <p>Notice how the time marker is a specific dot on the timeline.</p>
+                <ul style="list-style-type: disc;">
+                    <li>I have lived in this house <strong>since 2010</strong>.</li>
+                    <li>She has been hungry <strong>since breakfast</strong>.</li>
+                    <li>We have known each other <strong>since we were children</strong>. (Here, "we were children" is
+                        the starting event).</li>
+                </ul>
+
+                <h4>Using "For"</h4>
+                <p>Notice how the time marker is a calculated quantity of time.</p>
+                <ul style="list-style-type: disc;">
+                    <li>I have lived in this house <strong>for 13 years</strong>.</li>
+                    <li>She has been hungry <strong>for three hours</strong>.</li>
+                    <li>We have known each other <strong>for a long time</strong>.</li>
+                </ul>
+
+                <h3>3. Common Mistakes</h3>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Mistake</th>
+                            <th>Correction</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>❌ I have lived here <del>since 5 years</del>.</td>
+                            <td>✅ I have lived here <strong>for 5 years</strong>.</td>
+                            <td>"5 years" is a duration, not a starting date.</td>
+                        </tr>
+                        <tr>
+                            <td>❌ I have lived here <del>for 2018</del>.</td>
+                            <td>✅ I have lived here <strong>since 2018</strong>.</td>
+                            <td>"2018" is a specific date, not a duration.</td>
+                        </tr>
+                        <tr>
+                            <td>❌ I have lived here <del>since 5 years ago</del>.</td>
+                            <td>✅ I have lived here <strong>since 2018</strong>.<br><em>OR</em><br>✅ I arrived here
+                                <strong>5 years ago</strong> (Simple Past).
+                            </td>
+                            <td>We rarely use "ago" with Present Perfect. "Ago" puts the action firmly in the past
+                                (finished).</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="read-more-link" onclick="openPost('post-pp-since-for')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <!-- START POST -->
+        <article id="post-pp-unspecified" class="blog-post" data-tags="grammar,tenses,present-perfect">
+            <h2 class="post-title" onclick="openPost('post-pp-unspecified')">Present Perfect without Since and For
+            </h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('tenses'); event.stopPropagation();">tenses</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('present-perfect'); event.stopPropagation();">present-perfect</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    When we use the Present Perfect <strong>without</strong> time markers like <em>since</em> or
+                    <em>for</em>,
+                    we are usually describing an action that happened at an <strong>unspecified time</strong> in the
+                    past.
+                    The exact time is not important; the <strong>result</strong> or the <strong>experience</strong> is
+                    what matters.
+                </p>
+
+                <h3>1. Specific vs. Unspecified Time</h3>
+                <p>
+                    This is the most important difference between the Present Perfect and the Simple Past.
+                </p>
+
+                <!-- Reusing .content-table -->
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">Simple Past (Specific)</th>
+                            <th style="width: 50%;">Present Perfect (Unspecified)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                We mention <strong>exactly when</strong> it happened. The time period is finished.
+                            </td>
+                            <td>
+                                We <strong>do not say</strong> when it happened. The time is unknown or irrelevant.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <em>Examples:</em><br>
+                                - I saw that movie <strong>last Friday</strong>.<br>
+                                - She visited Paris <strong>in 2015</strong>.<br>
+                                - They ate lunch <strong>at 12:00</strong>.
+                            </td>
+                            <td>
+                                <em>Examples:</em><br>
+                                - I <strong>have seen</strong> that movie. (I know the story).<br>
+                                - She <strong>has visited</strong> Paris. (She has the memory).<br>
+                                - They <strong>have eaten</strong> lunch. (They are not hungry now).
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Reusing .rule-box -->
+                <div class="rule-box">
+                    <strong>Rule:</strong> Do NOT use specific time words (yesterday, last year, two days ago) with the
+                    Present Perfect.
+                </div>
+
+                <h3>2. Common Uses without Time Markers</h3>
+
+                <p>When "since" and "for" are absent, the sentence usually falls into one of these categories:</p>
+
+                <h4>A. Life Experience</h4>
+                <p>
+                    You are talking about things you have done in your life up to now. The time doesn't matter, only the
+                    fact that you did it.
+                </p>
+                <ul>
+                    <li>I <strong>have been</strong> to Japan twice.</li>
+                    <li>She <strong>has never eaten</strong> sushi.</li>
+                    <li><strong>Have</strong> you <strong>read</strong> this book?</li>
+                </ul>
+
+                <h4>B. Change Over Time</h4>
+                <p>
+                    Something happened in the past that caused a change in the present.
+                </p>
+                <ul>
+                    <li>Your English <strong>has improved</strong>. (It is better now than before).</li>
+                    <li>My niece <strong>has grown</strong> a lot. (She is taller now).</li>
+                </ul>
+
+                <h4>C. Accomplishments</h4>
+                <p>
+                    We mention a completed task, but the date is not important.
+                </p>
+                <ul>
+                    <li>Man <strong>has walked</strong> on the Moon.</li>
+                    <li>Doctors <strong>have discovered</strong> a cure for the disease.</li>
+                    <li>Our son <strong>has learned</strong> how to read.</li>
+                </ul>
+
+                <h4>D. A Result in the Present</h4>
+                <p>
+                    Something happened recently, and because of that, there is a clear result right now.
+                </p>
+                <ul>
+                    <li>I <strong>have lost</strong> my keys. (Result: I cannot get into my house <em>now</em>).</li>
+                    <li>He <strong>has hurt</strong> his leg. (Result: He cannot play soccer <em>today</em>).</li>
+                </ul>
+
+            </div>
+            <div class="read-more-link" onclick="openPost('post-pp-unspecified')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <!-- START POST -->
+        <article id="post-pp-adverbs" class="blog-post" data-tags="grammar,adverbs,present-perfect">
+            <h2 class="post-title" onclick="openPost('post-pp-adverbs')">Present Perfect Adverbs</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('adverbs'); event.stopPropagation();">adverbs</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('present-perfect'); event.stopPropagation();">present-perfect</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    The Present Perfect is often used with specific adverbs to add precision to the timing or frequency
+                    of an action.
+                    The most important rule to learn is <strong>where to put them</strong> in the sentence.
+                </p>
+
+                <h3>1. Common Adverbs and Word Order</h3>
+                <p>
+                    There are two main positions for adverbs in the Present Perfect tense.
+                </p>
+
+                <!-- Reusing .rule-box -->
+                <div class="rule-box">
+                    <p><strong>Position A (Mid-Position):</strong> Between the auxiliary and the main verb.</p>
+                    <p style="margin-left: 20px;"><em>Subject + HAVE + <strong>[Adverb]</strong> + Past Participle</em>
+                    </p>
+                    <p><strong>Position B (End-Position):</strong> At the very end of the sentence.</p>
+                    <p style="margin-left: 20px;"><em>Subject + HAVE + Past Participle + ... +
+                            <strong>[Adverb]</strong></em></p>
+                </div>
+
+                <h3>2. The "Big Three": Just, Already, Yet</h3>
+                <p>These three are the most frequently used adverbs with this tense.</p>
+
+                <!-- Reusing .content-table -->
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Adverb</th>
+                            <th style="width: 30%;">Meaning</th>
+                            <th style="width: 50%;">Usage & Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Just</strong></td>
+                            <td>A very short time ago (moments ago).</td>
+                            <td>
+                                <strong>Mid-Position</strong><br>
+                                "I have <strong>just</strong> finished my lunch."<br>
+                                "They have <strong>just</strong> arrived."
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Already</strong></td>
+                            <td>Happened sooner than expected, or completed early.</td>
+                            <td>
+                                <strong>Mid-Position</strong><br>
+                                "She has <strong>already</strong> left."<br>
+                                "We have <strong>already</strong> seen that movie."
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Yet</strong></td>
+                            <td>We expect it to happen, but it hasn't happened until now.</td>
+                            <td>
+                                <strong>End-Position</strong> (Only in Negatives & Questions)<br>
+                                "I haven't finished <strong>yet</strong>."<br>
+                                "Have you called him <strong>yet</strong>?"
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>3. Life Experience: Ever and Never</h3>
+                <p>These are used to talk about general life experiences at an unspecified time.</p>
+
+                <ul>
+                    <li><strong>Ever:</strong> Means "at any time in your life." Used mostly in
+                        <strong>questions</strong>.
+                        <ul>
+                            <li><em>Structure:</em> Have you <strong>ever</strong> eaten shark?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Never:</strong> Means "at no time." Used in <strong>positive sentences</strong> (but
+                        carries a negative meaning).
+                        <ul>
+                            <li><em>Structure:</em> I have <strong>never</strong> eaten shark.</li>
+                            <li><em>Note:</em> Do not use "not" and "never" together (<s>I haven't never</s>).</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>4. Other Common Adverbs</h3>
+                <p>
+                    <strong>Lately / Recently:</strong> These usually go at the <strong>end</strong> of the sentence,
+                    though "recently" can sometimes move.
+                </p>
+                <ul>
+                    <li>I haven't slept well <strong>lately</strong>.</li>
+                    <li>Have you seen any good movies <strong>recently</strong>?</li>
+                </ul>
+
+                <div class="rule-box">
+                    <strong>Word Order Summary Examples:</strong><br>
+                    ✅ I have <strong>just</strong> eaten.<br>
+                    ✅ I have <strong>never</strong> been there.<br>
+                    ✅ I haven't finished <strong>yet</strong>.<br>
+                    ❌ I <del>just have</del> eaten. (Wrong order)<br>
+                    ❌ I have eaten <del>already</del>. (Grammatically acceptable in spoken English, but mid-position is
+                    standard).
+                </div>
+
+            </div>
+            <div class="read-more-link" onclick="openPost('post-pp-adverbs')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <article id="post-stative-verbs" class="blog-post" data-tags="grammar,verbs,stative-verbs">
+            <h2 class="post-title" onclick="openPost('post-stative-verbs')">Stative Verbs</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('verbs'); event.stopPropagation();">verbs</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('stative-verbs'); event.stopPropagation();">stative-verbs</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    <strong>Stative verbs</strong> describe a state rather than an action. They are used to express
+                    emotions, senses,
+                    possession, or states of being.
+                    Understanding the difference between stative and non-stative (dynamic) verbs is crucial for proper
+                    verb tense usage.
+                </p>
+
+                <h3>1. Difference Between Stative and Non-Stative Verbs</h3>
+                <p>Stative verbs indicate a state or condition, while non-stative verbs represent actions or events.
+                    Here is a comparison:</p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Type of Verb</th>
+                            <th>Definition</th>
+                            <th>Examples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Stative Verbs</td>
+                            <td>Express a state or condition</td>
+                            <td>Know, Love, Belong</td>
+                        </tr>
+                        <tr>
+                            <td>Non-Stative Verbs</td>
+                            <td>Indicate an action or event</td>
+                            <td>Run, Jump, Speak</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="rule-box">
+                    <strong>Rule:</strong> <strong>Stative verbs</strong> cannot be used in the progressive tense, while
+                    </strong>non-stative verbs</strong>can.
+                </div>
+
+                <h3>2. Identifying Stative and Non-Stative Verbs</h3>
+                <p>To determine if a verb is stative or non-stative, consider the context of the sentence. Here are some
+                    guidelines:</p>
+
+                <ul>
+                    <li>If a verb describes feelings, thoughts, or states, it is likely stative.</li>
+                    <li>If it describes an action, it is likely non-stative.</li>
+                </ul>
+
+                <h4>Examples:</h4>
+                <ul>
+                    <li><strong>Stative:</strong> She <strong>knows</strong> the answer.</li>
+                    <li><strong>Non-Stative:</strong> She <strong>is knowing</strong> the answer. (Incorrect)</li>
+                </ul>
+
+                <h3>3. Progressive Tense Usage</h3>
+                <p>Most stative verbs cannot appear in the progressive tense; however, some can in specific contexts.
+                    Below are examples:</p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Verb</th>
+                            <th>Stative Use</th>
+                            <th>Progressive Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Have</td>
+                            <td>I <strong>have</strong> a car.</td>
+                            <td>I am <strong>having</strong> a great time! (specific context)</td>
+                        </tr>
+                        <tr>
+                            <td>See</td>
+                            <td>I <strong>see</strong> the big picture.</td>
+                            <td>I am <strong>seeing</strong> the doctor later.</td>
+                        </tr>
+                        <tr>
+                            <td>Think</td>
+                            <td>I <strong>think</strong> it’s a good idea.</td>
+                            <td>I am <strong>thinking</strong> about my options.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Understanding when to use stative and non-stative verbs can significantly improve your command of
+                    English grammar.</p>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-stative-verbs')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+
+        <article id="post-present-perfect-progressive" class="blog-post"
+            data-tags="grammar,tenses,present-perfect-progressive">
+            <h2 class="post-title" onclick="openPost('post-present-perfect-progressive')">Present Perfect Progressive
+            </h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('tenses'); event.stopPropagation();">tenses</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('present-perfect-progressive'); event.stopPropagation();">present-perfect-progressive</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    The Present Perfect Progressive is used to express actions that began in the past and continue into
+                    the present, emphasizing the duration or ongoing nature of the action.
+                </p>
+
+                <h3>1. Forming the Present Perfect Progressive</h3>
+                <p>To form the Present Perfect Progressive, we use the structure:</p>
+
+                <div class="rule-box">
+                    <strong>Rule:</strong> Subject + <em>have / has</em> + been + Present Participle (verb+ing)
+                </div>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Auxiliary Verb</th>
+                            <th>Been</th>
+                            <th>Present Participle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>I / You / We / They</td>
+                            <td><strong>have</strong> ('ve)</td>
+                            <td><strong>been</strong></td>
+                            <td>working / studying / playing</td>
+                        </tr>
+                        <tr>
+                            <td>He / She / It</td>
+                            <td><strong>has</strong> ('s)</td>
+                            <td><strong>been</strong></td>
+                            <td>working / studying / playing</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2. When to Use the Present Perfect Progressive</h3>
+                <p>This tense is used in the following situations:</p>
+                <ul>
+                    <li>To show an action that started in the past and is still continuing.</li>
+                    <li>To emphasize the duration of an activity that has recently stopped or is still ongoing.</li>
+                </ul>
+
+                <h4>Examples:</h4>
+                <ul>
+                    <li>I <strong>have been studying</strong> English for three years.</li>
+                    <li>They <strong>have been playing</strong> soccer since morning.</li>
+                </ul>
+
+                <h3>3. Difference Between Present Perfect Progressive and Present Perfect Tense</h3>
+                <p>The Present Perfect Progressive and Present Perfect Tense both refer to actions related to the
+                    present, but they serve different purposes:</p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Present Perfect Progressive</th>
+                            <th>Present Perfect Tense</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Focus</td>
+                            <td>Emphasizes the duration or ongoing nature of an action</td>
+                            <td>Focuses on the completion of an action</td>
+                        </tr>
+                        <tr>
+                            <td>Form</td>
+                            <td>Have/has been + Present Participle</td>
+                            <td>Have/has + Past Participle</td>
+                        </tr>
+                        <tr>
+                            <td>Example</td>
+                            <td>I <strong>have been reading</strong> for two hours.</td>
+                            <td>I <strong>have read</strong> five books this month.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Understanding the Present Perfect Progressive is essential for conveying the ongoing nature of past
+                    actions and their relevance to the present.</p>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-present-perfect-progressive')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <article id="post-present-perfect-progressive-questions" class="blog-post"
+            data-tags="grammar,tenses,present-perfect-progressive,questions">
+            <h2 class="post-title" onclick="openPost('post-present-perfect-progressive-questions')">Present Perfect
+                Progressive Questions</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('tenses'); event.stopPropagation();">tenses</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('present-perfect-progressive'); event.stopPropagation();">present-perfect-progressive</span>
+                    <span class="tag" onclick="toggleTagFilter('questions'); event.stopPropagation();">questions</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    Forming and answering questions in the Present Perfect Progressive tense is essential for effective
+                    communication,
+                    especially when discussing ongoing actions that started in the past.
+                </p>
+
+                <h3>1. Forming Questions in the Present Perfect Progressive</h3>
+                <p>To form a question in the Present Perfect Progressive tense, use the following structure:</p>
+
+                <div class="rule-box">
+                    <strong>Rule:</strong> <em>Have / Has</em> + subject + been + Present Participle (verb+ing)?
+                </div>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Question Type</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Yes/No Question</td>
+                            <td><strong>Have</strong> you <strong>been studying</strong> for the exam?</td>
+                        </tr>
+                        <tr>
+                            <td>Wh- Question</td>
+                            <td><strong>What</strong> have you <strong>been working</strong> on?</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2. Answering Questions in the Present Perfect Progressive</h3>
+                <p>When answering questions in this tense, respond by following the same structure, including the tense
+                    and the main verb:</p>
+
+                <div class="rule-box">
+                    <strong>Rule:</strong> Subject + <em>have / has</em> + been + Present Participle (verb+ing)
+                </div>
+
+                <h4>Examples of Answers:</h4>
+                <ul>
+                    <li>Question: <strong>Have</strong> you <strong>been studying</strong> for the exam?<br>
+                        Answer: Yes, I <strong>have been studying</strong> for three hours.</li>
+                    <li>Question: <strong>What</strong> have you <strong>been working</strong> on?<br>
+                        Answer: I <strong>have been working</strong> on my project.</li>
+                </ul>
+
+                <h3>3. Practice Examples</h3>
+                <p>Here are some additional examples to illustrate forming and answering questions:</p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Answer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Have you been exercising regularly?</td>
+                            <td>Yes, I have been exercising every morning.</td>
+                        </tr>
+                        <tr>
+                            <td>How long have they been playing football?</td>
+                            <td>They have been playing football for two hours.</td>
+                        </tr>
+                        <tr>
+                            <td>Why has she been learning Spanish?</td>
+                            <td>She has been learning Spanish to travel.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Mastering how to form and answer questions in the Present Perfect Progressive tense will enhance your
+                    conversational skills and clarify ongoing activities.</p>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-present-perfect-progressive-questions')">Read Article →
+            </div>
+        </article>
+        <!-- END POST -->
+
+        <article id="post-present-perfect-vs-progressive" class="blog-post"
+            data-tags="grammar,tenses,present-perfect,present-perfect-progressive">
+            <h2 class="post-title" onclick="openPost('post-present-perfect-vs-progressive')">Present Perfect vs.
+                Present Perfect Progressive</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('tenses'); event.stopPropagation();">tenses</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('present-perfect'); event.stopPropagation();">present-perfect</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('present-perfect-progressive'); event.stopPropagation();">present-perfect-progressive</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    The Present Perfect and Present Perfect Progressive tenses are related but serve different purposes
+                    in English grammar. This guide will highlight their similarities and differences.
+                </p>
+
+                <h3>1. Similarities Between Present Perfect and Present Perfect Progressive</h3>
+                <ol>
+                    <li>Both tenses connect past actions or states with the present moment.</li>
+                    <li>Both can use <em>have</em> or <em>has</em> as auxiliary verbs.</li>
+                    <li>Both tenses can answer questions about how long something has been happening.</li>
+                </ol>
+
+                <h3>2. Differences Between Present Perfect and Present Perfect Progressive</h3>
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Present Perfect</th>
+                            <th>Present Perfect Progressive</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Focus</td>
+                            <td>Emphasizes the completion of an action</td>
+                            <td>Emphasizes the duration or ongoing nature of an action</td>
+                        </tr>
+                        <tr>
+                            <td>Form</td>
+                            <td>Have/has + Past Participle</td>
+                            <td>Have/has been + Present Participle (verb+ing)</td>
+                        </tr>
+                        <tr>
+                            <td>Example</td>
+                            <td>I <strong>have finished</strong> my homework.</td>
+                            <td>I <strong>have been finishing</strong> my homework for an hour.</td>
+                        </tr>
+                        <tr>
+                            <td>Duration</td>
+                            <td>Does not typically indicate duration</td>
+                            <td>Often indicates how long something has been happening</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>3. Correct Usage</h3>
+                <p>Here are examples of correctly using both tenses:</p>
+
+                <h4>Present Perfect:</h4>
+                <ul>
+                    <li>They <strong>have traveled</strong> to several countries this year.</li>
+                    <li>She <strong>has completed</strong> her degree.</li>
+                </ul>
+
+                <h4>Present Perfect Progressive:</h4>
+                <ul>
+                    <li>They <strong>have been traveling</strong> for a month.</li>
+                    <li>She <strong>has been completing</strong> her degree while working.</li>
+                </ul>
+
+                <h3>4. Another Name for Progressive Tenses</h3>
+                <p>Another name for progressive tenses is <strong>continuous tenses</strong>, which indicates the
+                    ongoing nature of
+                    the actions being described.</p>
+
+                <p>Understanding these tenses will enhance your grammatical skills, enabling you to express both
+                    completed actions and ongoing situations effectively.</p>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-present-perfect-vs-progressive')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <article id="post-past-perfect" class="blog-post" data-tags="grammar,tenses,past-perfect">
+            <h2 class="post-title" onclick="openPost('post-past-perfect')">Past Perfect</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('tenses'); event.stopPropagation();">tenses</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('past-perfect'); event.stopPropagation();">past-perfect</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    The Past Perfect tense is used to express an action that was completed before another action or
+                    point in the past. It emphasizes the sequence of events in the past.
+                </p>
+
+                <h3>1. Meaning of the Past Perfect Tense</h3>
+                <p>The Past Perfect tense indicates that an action happened before another event or time in the past. It
+                    helps clarify which action occurred first, providing a clear chronological structure to narratives
+                    or descriptions.</p>
+
+                <div class="rule-box">
+                    <strong>Rule:</strong> Subject + <em>had</em> + Past Participle
+                </div>
+
+                <h3>2. Correct Usage of the Past Perfect Tense</h3>
+                <p>To use the Past Perfect tense correctly, follow this structure. Here are some examples:</p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Example Sentence</th>
+                            <th>Explanation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>By the time she arrived, I <strong>had finished</strong> my homework.</td>
+                            <td>The action of finishing the homework occurred before she arrived.</td>
+                        </tr>
+                        <tr>
+                            <td>They <strong>had left</strong> when we got to the party.</td>
+                            <td>The action of leaving happened before our arrival at the party.</td>
+                        </tr>
+                        <tr>
+                            <td>He realized that he <strong>had forgotten</strong> his keys at home.</td>
+                            <td>The forgetting of the keys happened before the realization.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Using Past Perfect with Time Clauses:</h4>
+                <p>The Past Perfect is often used with time conjunctions like "when," "after," and "before." Here are
+                    examples:</p>
+                <ul>
+                    <li>After he <strong>had finished</strong> his dinner, he went for a walk.</li>
+                    <li>She had already seen the movie when we decided to watch it.</li>
+                </ul>
+
+                <p>Understanding the Past Perfect tense allows for more nuanced storytelling, helping convey the
+                    sequence of past events effectively.</p>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-past-perfect')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <article id="post-past-perfect-questions" class="blog-post" data-tags="grammar,tenses,past-perfect,questions">
+            <h2 class="post-title" onclick="openPost('post-past-perfect-questions')">Past Perfect Questions</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('tenses'); event.stopPropagation();">tenses</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('past-perfect'); event.stopPropagation();">past-perfect</span>
+                    <span class="tag" onclick="toggleTagFilter('questions'); event.stopPropagation();">questions</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    Forming and answering questions in the Past Perfect tense is essential for discussing events in a
+                    sequential order in the past.
+                </p>
+
+                <h3>1. Forming Questions in the Past Perfect Tense</h3>
+                <p>To form a question in the Past Perfect tense, use the following structure:</p>
+
+                <div class="rule-box">
+                    <strong>Rule:</strong> <em>Had</em> + subject + Past Participle?
+                </div>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Question Type</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Yes/No Question</td>
+                            <td><strong>Had</strong> you <strong>finished</strong> the report before the deadline?</td>
+                        </tr>
+                        <tr>
+                            <td>Wh- Question</td>
+                            <td><strong>Why had</strong> she <strong>left</strong> early?</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2. Answering Questions in the Past Perfect Tense</h3>
+                <p>When answering questions in this tense, respond by following the same structure. Here are some
+                    examples:</p>
+
+                <div class="rule-box">
+                    <strong>Rule:</strong> Subject + <em>had</em> + Past Participle
+                </div>
+
+                <h4>Examples of Answers:</h4>
+                <ul>
+                    <li>Question: <strong>Had</strong> you <strong>finished</strong> the report before the deadline?<br>
+                        Answer: Yes, I <strong>had finished</strong> it two days earlier.</li>
+                    <li>Question: <strong>Why had</strong> she <strong>left</strong> early?<br>
+                        Answer: She <strong>had left</strong> early because she felt unwell.</li>
+                </ul>
+
+                <h3>3. Practice Examples</h3>
+                <p>Here are more examples to illustrate forming and answering questions:</p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Answer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Had they already <strong>departed</strong> when you arrived?</td>
+                            <td>Yes, they <strong>had departed</strong> just before I got there.</td>
+                        </tr>
+                        <tr>
+                            <td>What had you <strong>decided</strong> by the time we met?</td>
+                            <td>I <strong>had decided</strong> to take the other route.</td>
+                        </tr>
+                        <tr>
+                            <td>Why had he <strong>not called</strong> you back?</td>
+                            <td>He had not called back because he was busy.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Mastering how to form and answer questions in the Past Perfect tense will enhance your communicative
+                    clarity and help convey the sequence of past events effectively.</p>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-past-perfect-questions')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <article id="post-past-perfect-progressive" class="blog-post"
+            data-tags="grammar,tenses,past-perfect-progressive">
+            <h2 class="post-title" onclick="openPost('post-past-perfect-progressive')">Past Perfect Progressive</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('tenses'); event.stopPropagation();">tenses</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('past-perfect-progressive'); event.stopPropagation();">past-perfect-progressive</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <h3>1. Using the Past Perfect Progressive Tense Correctly</h3>
+                <p>The Past Perfect Progressive tense is used to indicate that an action was ongoing in the past before
+                    another past action occurred. To form this tense, use the following structure:</p>
+
+                <div class="rule-box">
+                    <strong>Rule:</strong> Subject + <em>had been</em> + Present Participle (verb+ing)
+                </div>
+
+                <h4>Examples:</h4>
+                <ul>
+                    <li>She <strong>had been studying</strong> for hours before the exam started.</li>
+                    <li>They <strong>had been waiting</strong> for the bus when it began to rain.</li>
+                    <li>He <strong>had been working</strong> at the company for ten years before he left.</li>
+                </ul>
+
+                <h3>2. Similarity to the Present Perfect Progressive Tense</h3>
+                <p>Although the Past Perfect Progressive and Present Perfect Progressive tenses are used in different
+                    time contexts, they share several similarities:</p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Past Perfect Progressive</th>
+                            <th>Present Perfect Progressive</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Focus</td>
+                            <td>Emphasizes the duration of an action before another past action</td>
+                            <td>Emphasizes the duration of an action that started in the past and continues to the
+                                present</td>
+                        </tr>
+                        <tr>
+                            <td>Form</td>
+                            <td>Had been + Present Participle</td>
+                            <td>Have/has been + Present Participle</td>
+                        </tr>
+                        <tr>
+                            <td>Example</td>
+                            <td>They <strong>had been traveling</strong> for hours before they stopped.</td>
+                            <td>They <strong>have been traveling</strong> for hours and are still on the road.</td>
+                        </tr>
+                        <tr>
+                            <td>Purpose</td>
+                            <td>To describe an ongoing action before a specific point in the past</td>
+                            <td>To describe an ongoing action that is relevant to the present</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Understanding the Past Perfect Progressive tense enhances your ability to convey actions that were
+                    ongoing in the past, providing clarity in narrating events.</p>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-past-perfect-progressive')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <article id="post-past-perfect-progressive-questions" class="blog-post"
+            data-tags="grammar,tenses,past-perfect-progressive,questions">
+            <h2 class="post-title" onclick="openPost('post-past-perfect-progressive-questions')">Past Perfect
+                Progressive Questions</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('tenses'); event.stopPropagation();">tenses</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('past-perfect-progressive'); event.stopPropagation();">past-perfect-progressive</span>
+                    <span class="tag" onclick="toggleTagFilter('questions'); event.stopPropagation();">questions</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    Forming and answering questions in the Past Perfect Progressive tense is important for discussing
+                    ongoing actions that were happening before another past event.
+                </p>
+
+                <h3>1. Forming Questions in the Past Perfect Progressive Tense</h3>
+                <p>To form a question in the Past Perfect Progressive tense, use the following structure:</p>
+
+                <div class="rule-box">
+                    <strong>Rule:</strong> <em>Had</em> + subject + <em>been</em> + Present Participle (verb+ing)?
+                </div>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Question Type</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Yes/No Question</td>
+                            <td><strong>Had</strong> you <strong>been working</strong> on the project before the
+                                deadline?</td>
+                        </tr>
+                        <tr>
+                            <td>Wh- Question</td>
+                            <td><strong>Why had</strong> they <strong>been waiting</strong> for so long?</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2. Answering Questions in the Past Perfect Progressive Tense</h3>
+                <p>When answering questions in this tense, follow the same structure as in the question. Here are some
+                    examples:</p>
+
+                <div class="rule-box">
+                    <strong>Rule:</strong> Subject + <em>had</em> + <em>been</em> + Present Participle (verb+ing)
+                </div>
+
+                <h4>Examples of Answers:</h4>
+                <ul>
+                    <li>Question: <strong>Had</strong> you <strong>been working</strong> on the project before the
+                        deadline?<br>
+                        Answer: Yes, I <strong>had been working</strong> on it for weeks.</li>
+                    <li>Question: <strong>Why had</strong> they <strong>been waiting</strong> for so long?<br>
+                        Answer: They <strong>had been waiting</strong> because the meeting was delayed.</li>
+                </ul>
+
+                <h3>3. Practice Examples</h3>
+                <p>Here are additional examples to illustrate forming and answering questions:</p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Answer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Had you <strong>been studying</strong> for the exam?</td>
+                            <td>Yes, I <strong>had been studying</strong> for days.</td>
+                        </tr>
+                        <tr>
+                            <td>What had they <strong>been discussing</strong> before you arrived?</td>
+                            <td>They <strong>had been discussing</strong> the project details.</td>
+                        </tr>
+                        <tr>
+                            <td>Why had she <strong>been feeling</strong> unwell?</td>
+                            <td>She <strong>had been feeling</strong> unwell due to stress.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Mastering how to form and answer questions in the Past Perfect Progressive tense will enhance your
+                    communication skills and clarify the sequence of past events effectively.</p>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-past-perfect-progressive-questions')">Read Article →
+            </div>
+        </article>
+        <!-- END POST -->
+
+        <article id="post-modals-introduction" class="blog-post" data-tags="grammar,modals,introduction">
+            <h2 class="post-title" onclick="openPost('post-modals-introduction')">Modals Introduction</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag" onclick="toggleTagFilter('modals'); event.stopPropagation();">modals</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('introduction'); event.stopPropagation();">introduction</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <h3>1. Examples of Modals</h3>
+                <p>Modals are auxiliary verbs used to express ability, possibility, permission, or necessity. Here are
+                    several common examples:</p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Modal</th>
+                            <th>Meaning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Can</td>
+                            <td>Ability or possibility</td>
+                        </tr>
+                        <tr>
+                            <td>Could</td>
+                            <td>Past ability or polite request</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Permission or possibility</td>
+                        </tr>
+                        <tr>
+                            <td>Might</td>
+                            <td>Possibility (less certain than may)</td>
+                        </tr>
+                        <tr>
+                            <td>Must</td>
+                            <td>Necessity or strong obligation</td>
+                        </tr>
+                        <tr>
+                            <td>Should</td>
+                            <td>Advice or recommendation</td>
+                        </tr>
+                        <tr>
+                            <td>Will</td>
+                            <td>Future intention or promise</td>
+                        </tr>
+                        <tr>
+                            <td>Would</td>
+                            <td>Polite request or hypothetical situations</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2. Rules for Using Modals in Sentences</h3>
+                <p>When using modals in sentences, there are specific rules to keep in mind:</p>
+
+                <h4>Rule 1: Modals Do Not Change Form</h4>
+                <p>Modals do not take "s," "ed," or "ing." They remain in the same form regardless of the subject.</p>
+                <h4>Examples:</h4>
+                <ul>
+                    <li>She <strong>can</strong> swim.</li>
+                    <li>He <strong>should</strong> read this book.</li>
+                    <li>They <strong>must</strong> finish their homework.</li>
+                </ul>
+
+                <h4>Rule 2: Modals are Followed by the Base Form of the Verb</h4>
+                <p>When used in sentences, modals are directly followed by the base form of the main verb.</p>
+                <h4>Examples:</h4>
+                <ul>
+                    <li>He <strong>can</strong> <strong>run</strong> fast.</li>
+                    <li>She <strong>might</strong> <strong>come</strong> to the party.</li>
+                    <li>You <strong>must</strong> <strong>try</strong> this dish.</li>
+                </ul>
+
+                <p>Understanding modals and their rules is essential for conveying nuances in meaning and expressing
+                    various attitudes in English communication.</p>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-modals-introduction')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <article id="post-phrasal-modals" class="blog-post" data-tags="grammar,phrasal-modals">
+            <h2 class="post-title" onclick="openPost('post-phrasal-modals')">Phrasal Modals</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('phrasal-modals'); event.stopPropagation();">phrasal-modals</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <h3>1. Differences Between Regular Modals and Phrasal Modals</h3>
+                <p>Phrasal modals are combinations of modal verbs with other words that together express modality. Here
+                    are two key differences between regular modals and phrasal modals:</p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Regular Modals</th>
+                            <th>Phrasal Modals</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Structure</td>
+                            <td>Single word (e.g., can, may, must)</td>
+                            <td>Combination of a modal verb with an additional word or words (e.g., have to, ought to)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Formality</td>
+                            <td>Generally more formal</td>
+                            <td>Often more conversational or informal</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2. Using Phrasal Modals Correctly in Sentences</h3>
+                <p>Phrasal modals are used in similar contexts as regular modals but have a more nuanced meaning. Here
+                    are some examples of using phrasal modals in sentences:</p>
+
+                <h4>Examples:</h4>
+                <ul>
+                    <li>You <strong>have to</strong> finish your homework before playing.</li>
+                    <li>She <strong>ought to</strong> visit her grandmother more often.</li>
+                    <li>We <strong>need to</strong> leave early to avoid traffic.</li>
+                    <li>He <strong>has got to</strong> see the new movie; it’s fantastic!</li>
+                </ul>
+
+                <p>Phrasal modals help add clarity and nuance to communication, providing emphasis on necessity,
+                    obligation, or recommendations.</p>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-phrasal-modals')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+        <article id="post-ability-modals" class="blog-post" data-tags="grammar,ability-modals">
+            <h2 class="post-title" onclick="openPost('post-ability-modals')">Ability Modals</h2>
+
+            <div class="post-meta">
+                <span class="post-date">Perfect Tenses and Modals</span>
+                <div class="tags-container">
+                    <span class="tag" onclick="toggleTagFilter('grammar'); event.stopPropagation();">grammar</span>
+                    <span class="tag"
+                        onclick="toggleTagFilter('ability-modals'); event.stopPropagation();">ability-modals</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <h3>1. Ability Modals</h3>
+                <p>Ability modals are used to express capability or skill. Here is a list of common ability modals:</p>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Modal</th>
+                            <th>Meaning</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Can</td>
+                            <td>Present ability</td>
+                            <td>I <strong>can</strong> speak three languages.</td>
+                        </tr>
+                        <tr>
+                            <td>Could</td>
+                            <td>Past ability or polite request</td>
+                            <td>When I was younger, I <strong>could</strong> run fast.</td>
+                        </tr>
+                        <tr>
+                            <td>Be able to</td>
+                            <td>Future or more formal ability</td>
+                            <td>She <strong>will be able to</strong> complete the project by next week.</td>
+                        </tr>
+                        <tr>
+                            <td>Be capable of</td>
+                            <td>General ability or skill</td>
+                            <td>He <strong>is capable of</strong> solving complex problems.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2. Using Ability Modals Correctly in Sentences</h3>
+                <p>Here are some examples of using ability modals in sentences to talk about your abilities:</p>
+
+                <h4>Examples:</h4>
+                <ul>
+                    <li>I <strong>can</strong> play the piano very well.</li>
+                    <li>In high school, I <strong>could</strong> solve advanced math problems.</li>
+                    <li>After completing the course, I <strong>will be able to</strong> code in Python.</li>
+                    <li>With practice, she <strong>is capable of</strong> running a marathon.</li>
+                </ul>
+
+                <p>Mastering ability modals allows you to communicate your skills and capabilities effectively,
+                    enhancing your expressive language skills.</p>
+            </div>
+            <div class="read-more-link" onclick="openPost('post-ability-modals')">Read Article →</div>
+        </article>
+        <!-- END POST -->
+
+
+
+    </div>
+
+    <footer>
+        &copy; 2026 English Scrapbook. All rights reserved.
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let selectedTags = new Set();
+        let allUniqueTags = new Set();
+
+        // Variable to store scroll position
+        let listScrollY = 0;
+
+        // 1. Initialize
+        document.addEventListener("DOMContentLoaded", () => {
+            collectTags();
+            renderTagCloud();
+            handleRouting();
+        });
+
+        // Listen for back/forward button clicks in browser
+        window.onhashchange = handleRouting;
+
+        // --- ROUTING LOGIC (List vs Details) ---
+
+        function openPost(postId) {
+            // SAVE SCROLL POSITION BEFORE SWITCHING
+            listScrollY = window.scrollY;
+
+            // Change URL hash (triggers onhashchange)
+            window.location.hash = postId;
+        }
+
+        function goBackToList() {
+            // Remove hash
+            history.pushState("", document.title, window.location.pathname + window.location.search);
+            handleRouting();
+        }
+
+        function handleRouting() {
+            const hash = window.location.hash; // e.g., "#post-1"
+            const body = document.body;
+            const tagCloud = document.getElementById('tag-cloud-section');
+            const backBtn = document.getElementById('back-button-container');
+            const allPosts = document.querySelectorAll('.blog-post');
+
+            if (hash && hash.startsWith('#post-')) {
+                // === DETAIL VIEW ===
+                const targetId = hash.substring(1); // remove '#'
+                const targetPost = document.getElementById(targetId);
+
+                if (targetPost) {
+                    body.classList.remove('view-list');
+                    body.classList.add('view-detail');
+                    tagCloud.style.display = 'none';
+                    backBtn.style.display = 'block';
+
+                    // Hide all posts, Show target
+                    allPosts.forEach(post => post.style.display = 'none');
+                    targetPost.style.display = 'block';
+
+                    // Scroll to top for reading
+                    window.scrollTo(0, 0);
+                }
+            } else {
+                // === LIST VIEW ===
+                body.classList.remove('view-detail');
+                body.classList.add('view-list');
+                tagCloud.style.display = 'block';
+                backBtn.style.display = 'none';
+
+                // Re-apply filters
+                filterPosts();
+
+                // RESTORE SCROLL POSITION
+                // We use a tiny timeout to ensure the DOM has updated (hidden elements became block)
+                if (listScrollY > 0) {
+                    setTimeout(() => {
+                        window.scrollTo(0, listScrollY);
+                    }, 0);
+                }
+            }
+        }
+
+        // --- TAG LOGIC ---
+
+        function collectTags() {
+            const posts = document.querySelectorAll('.blog-post');
+            posts.forEach(post => {
+                const tagsString = post.getAttribute('data-tags');
+                if (tagsString) {
+                    const tags = tagsString.split(',').map(t => t.trim());
+                    tags.forEach(tag => allUniqueTags.add(tag));
+                }
+            });
+        }
+
+        function renderTagCloud() {
+            const container = document.getElementById('tag-cloud-container');
+            container.innerHTML = '';
+
+            const sortedTags = Array.from(allUniqueTags).sort();
+
+            sortedTags.forEach(tag => {
+                const btn = document.createElement('span');
+                btn.classList.add('tag');
+                btn.innerText = tag;
+                if (selectedTags.has(tag)) btn.classList.add('active');
+
+                btn.onclick = (e) => {
+                    toggleTagFilter(tag);
+                };
+                container.appendChild(btn);
+            });
+
+            const clearBtn = document.getElementById('clear-filters');
+            clearBtn.style.display = selectedTags.size > 0 ? 'inline-block' : 'none';
+        }
+
+        function toggleTagFilter(tag) {
+            // If in detail view, go back to list first
+            if (document.body.classList.contains('view-detail')) {
+                // Save that we want to go back to list, but maybe not specific scroll since we are changing filters
+                listScrollY = 0;
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+                handleRouting();
+            }
+
+            if (selectedTags.has(tag)) {
+                selectedTags.delete(tag);
+            } else {
+                selectedTags.add(tag);
+            }
+
+            renderTagCloud();
+            filterPosts();
+            updatePostInternalTags();
+        }
+
+        function filterPosts() {
+            if (document.body.classList.contains('view-detail')) return;
+
+            const posts = document.querySelectorAll('.blog-post');
+            posts.forEach(post => {
+                if (selectedTags.size === 0) {
+                    post.style.display = 'block';
+                    return;
+                }
+                const postTagsString = post.getAttribute('data-tags');
+                const postTags = postTagsString ? postTagsString.split(',').map(t => t.trim()) : [];
+                const hasMatch = postTags.some(t => selectedTags.has(t));
+                post.style.display = hasMatch ? 'block' : 'none';
+            });
+        }
+
+        function clearAllFilters() {
+            selectedTags.clear();
+            renderTagCloud();
+            filterPosts();
+            updatePostInternalTags();
+        }
+
+        function updatePostInternalTags() {
+            const internalTags = document.querySelectorAll('.post-meta .tag');
+            internalTags.forEach(tagEl => {
+                const tagText = tagEl.innerText;
+                if (selectedTags.has(tagText)) {
+                    tagEl.classList.add('active');
+                } else {
+                    tagEl.classList.remove('active');
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>
